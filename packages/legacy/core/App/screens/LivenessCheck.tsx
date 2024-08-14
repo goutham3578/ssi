@@ -11,7 +11,38 @@ const OpenCamera = () => {
   const [showwebView,setShowWebView] = useState(false)
 
   const WebViewComponent = () => {
-    return <WebView source={{ uri: 'https://aadhaar-liveness-check.vercel.app/' }} style={{ flex: 1 }} />;
+    const [url, setUrl] = useState('');
+    const navigation = useNavigation();
+  
+    const message = (event) => {
+      try {
+        const data = JSON.parse(event.nativeEvent.data); 
+  
+        if(data.type === 'navigate'){
+          setUrl(data.url);
+          navigation.navigate(Screens.Terms, { url: data.url })
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  
+  
+    // const message = (
+    //   event: NativeSyntheticEvent<WebViewMessageEvent>,
+    // ) => {
+    //   try {
+    //     const data: MessageData = JSON.parse(event.nativeEvent.data);
+    
+    //     if (data.type === 'navigate') {
+    //       setUrl(data.url);
+    //       navigation.navigate(Screens.Terms, { url: data.url });
+    //     }
+    //   } catch (error) {
+    //     console.error('Error parsing message data:', error);
+    //   }
+    // };
+    return <WebView source={{ uri: 'https://aws-rekognition-liveness-detection-spotmine-rho.vercel.app' }} onMessage={message} style={{ flex: 1 }} />;
   }
 
   return (

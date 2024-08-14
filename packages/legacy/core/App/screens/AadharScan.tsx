@@ -198,6 +198,8 @@ import { useOrientationChange, OrientationType } from 'react-native-orientation-
 import { Camera, useCameraDevice, useCodeScanner, CameraPermissionStatus } from 'react-native-vision-camera'
 // import { parseString } from 'react-native-xml2js'
 import {WebView} from "react-native-webview"
+import { useNavigation } from '@react-navigation/native';
+import { Screens } from './../types/navigators'
 
 
 const AadharScan: React.FC = () => {
@@ -255,9 +257,42 @@ const AadharScan: React.FC = () => {
   //   )
   // }
 
-
   const WebViewComponent = () => {
-    return <WebView source={{ uri: 'https://aadhaar-liveness-check.vercel.app/aadhaar' }} style={{ flex: 1 }} />;
+    const [url, setUrl] = useState('');
+    const navigation = useNavigation();
+  
+    const message = (event) => {
+      try {
+        const data = JSON.parse(event.nativeEvent.data); 
+  
+        if(data.type === 'navigate'){
+          setUrl(data?.url);
+          navigation.navigate(Screens.Terms, { url: data.url })
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  
+  
+    // const message = (
+    //   event: NativeSyntheticEvent<WebViewMessageEvent>,
+    // ) => {
+    //   try {
+    //     const data: MessageData = JSON.parse(event.nativeEvent.data);
+    
+    //     if (data.type === 'navigate') {
+    //       setUrl(data.url);
+    //       navigation.navigate(Screens.Terms, { url: data.url });
+    //     }
+    //   } catch (error) {
+    //     console.error('Error parsing message data:', error);
+    //   }
+    // };
+    return <WebView 
+    source={{ uri: 'https://aws-rekognition-liveness-detection-spotmine-rho.vercel.app/aadhaar' }}
+    onMessage={message}
+    style={{ flex: 1 }} />;
   }
   
   return (
