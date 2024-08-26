@@ -68,7 +68,9 @@ const LocationScreen = ({ route }) => {
                     {selectedCountry && selectedCountry.name === 'India' && (
                         <View style={{width:'100%',position:'relative'}} >
                             {/* <Image source={aadhar} resizeMode="contain" className="w-full" /> */}
-                            <TouchableOpacity onPress={() => navigation.navigate(Screens.AadharScan)}>
+                            <TouchableOpacity 
+                            // onPress={() => navigation.navigate(Screens.AadharScan)}
+                            >
                                 <Aadhar width={"100%"} />
                             </TouchableOpacity>
                             <TextInput style={{position:'absolute',paddingHorizontal:2,color:'black',paddingVertical:1,right:'10%',width:'55%',top:'50%',fontSize:10,borderWidth:1,borderColor:'#5869E6',borderRadius:5}} placeholder='Enter AAdhar Number' maxLength={12} placeholderTextColor={"black"} />

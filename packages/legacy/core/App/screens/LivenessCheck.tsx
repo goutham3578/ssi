@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TouchableOpacity, Image, Alert, TextStyle } from 'react-native'
+import { View, Text, TouchableOpacity, Image, Alert, TextStyle, Platform } from 'react-native'
 import { FONT_STYLE_2, FONT_STYLE_1, BUTTON_STYLE2 } from './../constants/fonts'
 import Icon from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/core'
@@ -9,40 +9,32 @@ import {WebView} from "react-native-webview"
 const OpenCamera = () => {
   const navigation = useNavigation()
   const [showwebView,setShowWebView] = useState(false)
-
+  const [currentUrl, setCurrentUrl] = useState<string>('');
+  
   const WebViewComponent = () => {
-    const [url, setUrl] = useState('');
     const navigation = useNavigation();
+
   
-    const message = (event) => {
-      try {
-        const data = JSON.parse(event.nativeEvent.data); 
-  
-        if(data.type === 'navigate'){
-          setUrl(data.url);
-          navigation.navigate(Screens.Terms, { url: data.url })
-        }
-      } catch (error) {
-        console.error(error);
-      }
+const handleMessage = (event: any) => {
+   try {
+    const message = JSON.parse(event.nativeEvent.data);
+    console.log('Received message:', message);
+    const { type, url } = message;
+    console.log(url)
+    setCurrentUrl(url)
+    if (type === 'navigate') {
+        navigation.navigate(Screens.Terms);
     }
+  } catch (error) {
+    console.error('Error parsing message:', error);
+  }
+};
   
-  
-    // const message = (
-    //   event: NativeSyntheticEvent<WebViewMessageEvent>,
-    // ) => {
-    //   try {
-    //     const data: MessageData = JSON.parse(event.nativeEvent.data);
-    
-    //     if (data.type === 'navigate') {
-    //       setUrl(data.url);
-    //       navigation.navigate(Screens.Terms, { url: data.url });
-    //     }
-    //   } catch (error) {
-    //     console.error('Error parsing message data:', error);
-    //   }
-    // };
-    return <WebView source={{ uri: 'https://aws-rekognition-liveness-detection-spotmine-rho.vercel.app' }} onMessage={message} style={{ flex: 1 }} />;
+    return <WebView
+     source={{ uri: 'https://aws-rekognition-liveness-detection-spotmine-rho.vercel.app' }}
+    onMessage={handleMessage} 
+     style={{ flex: 1 }}
+    />;
   }
 
   return (
@@ -119,4 +111,3 @@ const OpenCamera = () => {
 }
 
 export default OpenCamera
-
